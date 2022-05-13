@@ -4,26 +4,28 @@
   },
   "messages": [
     {
-      "contents": [
-        {
-          "name": "AAPL",
-          "price": 1.23,
-          "timestamp": "2022-02-14T13:14:15.678"
+      "contents": {
+        "desired": {
+          "deployments": {
+            "pactNet.Matchers.TypeMatcher": {
+              "appId": "amqp-dummy",
+              "appVersion": "0.0.29",
+              "id": "6XKISmGMWynbwM52mxov6S"
+            }
+          },
+          "deploymentsRemovals": {
+            "4JgEA5GCeqwVsu6Qada9XS": {
+              "appId": "amqp-dummy",
+              "appVersion": "0.0.29",
+              "id": "4JgEA5GCeqwVsu6Qada9XS"
+            }
+          }
         }
-      ],
+      },
       "description": "some stock ticker events",
       "matchingRules": {
         "body": {
-          "$": {
-            "combine": "AND",
-            "matchers": [
-              {
-                "match": "type",
-                "min": 1
-              }
-            ]
-          },
-          "$[*].name": {
+          "$.desired.deploymentsRemovals": {
             "combine": "AND",
             "matchers": [
               {
@@ -31,15 +33,47 @@
               }
             ]
           },
-          "$[*].price": {
+          "$.desired.deploymentsRemovals['4JgEA5GCeqwVsu6Qada9XS'].appId": {
             "combine": "AND",
             "matchers": [
               {
-                "match": "decimal"
+                "match": "type"
               }
             ]
           },
-          "$[*].timestamp": {
+          "$.desired.deploymentsRemovals['4JgEA5GCeqwVsu6Qada9XS'].appVersion": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.desired.deploymentsRemovals['4JgEA5GCeqwVsu6Qada9XS'].id": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.desired.deployments['pactNet.Matchers.TypeMatcher'].appId": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.desired.deployments['pactNet.Matchers.TypeMatcher'].appVersion": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.desired.deployments['pactNet.Matchers.TypeMatcher'].id": {
             "combine": "AND",
             "matchers": [
               {

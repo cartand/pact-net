@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using PactNet;
 using PactNet.Matchers;
@@ -39,23 +40,35 @@ namespace Consumer.Tests
                 .ExpectsToReceive("some stock ticker events")
                 .Given("A list of events is pushed to the queue")
                 .WithMetadata("key", "valueKey")
-                .WithJsonContent(Match.MinType(new
+                .WithJsonContent( new
                 {
-                    Name = Match.Type("AAPL"),
-                    Price = Match.Decimal(1.23m),
-                    Timestamp = Match.Type(14.February(2022).At(13, 14, 15, 678))
-                }, 1))
-                .Verify<ICollection<StockEvent>>(events =>
-                {
-                    events.Should().BeEquivalentTo(new[]
+                    desired = new
                     {
-                        new StockEvent
-                        {
-                            Name = "AAPL",
-                            Price = 1.23m,
-                            Timestamp = 14.February(2022).At(13, 14, 15, 678)
-                        }
-                    });
+                        deployments = new Dictionary<object, object> {
+                                {Match.Type("6XKISmGMWynbwM52mxov6S"),
+                                    new {
+                                        id = Match.Type("6XKISmGMWynbwM52mxov6S"),
+                                        appId =  Match.Type("amqp-dummy"),
+                                        appVersion =  Match.Type("0.0.29"),
+                                    }
+                                }
+
+                            },
+                        deploymentsRemovals = Match.Type(new Dictionary<string, object> {
+                                {"4JgEA5GCeqwVsu6Qada9XS",
+                                    new {
+                                        id = Match.Type("4JgEA5GCeqwVsu6Qada9XS"),
+                                        appId = Match.Type("amqp-dummy"),
+                                        appVersion = Match.Type("0.0.29"),
+                                    }
+                                }
+                            })
+                    }
+                }
+                )
+                .Verify<JObject>(events =>
+                {
+                    
                 });
         }
     }
